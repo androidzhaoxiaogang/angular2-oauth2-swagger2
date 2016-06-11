@@ -45,7 +45,7 @@ import java.util.Map;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ServerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SampleSecureOAuth2ApplicationTests<U extends User> {
+public class SampleSecureOAuth2ApplicationTest {
 
     @Autowired
     WebApplicationContext context;

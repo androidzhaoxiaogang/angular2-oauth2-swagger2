@@ -135,3 +135,17 @@ and this mean't the oauth2 web security config picked it up instead.
 /users -> oauth2 filter/security config
 /swagger-ui/index.html - allow through
 /login -> form login filter/security config
+
+
+
+Issues:
+
+
+1.
+
+It should return a 401 when hitting a REST endpoint, but instead it is
+returning a 302 (to redirect to login page).  This is not really what we want.
+
+2. 
+
+It no longer seems to be handling Basic: authorization header
