@@ -72,9 +72,12 @@ public class SampleSecureOAuth2ApplicationTest {
 
 
         userRepository.deleteAll();
-        userRepository.save(userRepository.save(new User()));
-        userRepository.save(userRepository.save(new User(userName)));
-        userRepository.save(userRepository.save(new User(userName2)));
+        final User user = new User();
+        user.setUsername("system");
+        user.setPassword("free4all");
+        userRepository.save(userRepository.save(user));
+       // userRepository.save(userRepository.save(new User(userName)));
+       // userRepository.save(userRepository.save(new User(userName2)));
     }
 
     @Test
@@ -127,8 +130,8 @@ public class SampleSecureOAuth2ApplicationTest {
 
 
 
-        assertThat(asList.length, is(3));
-        assertThat(asList[0].getUsername(), is("system"));
+        assertThat(asList.length, is(1));
+        assertThat(asList[0].getUsername(), is("admin"));
     }
 
 }

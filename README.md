@@ -141,11 +141,4 @@ and this mean't the oauth2 web security config picked it up instead.
 Issues:
 
 
-1.
-
-It should return a 401 when hitting a REST endpoint, but instead it is
-returning a 302 (to redirect to login page).  This is not really what we want.
-
-2. 
-
-It no longer seems to be handling Basic: authorization header
+I had to disable formLogin for now, as this is stopping BasicAuthoirzationFilter working and returning 301 from rest endpoints when it should return 401.
