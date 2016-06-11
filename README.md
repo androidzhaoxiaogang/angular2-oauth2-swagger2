@@ -135,10 +135,3 @@ and this mean't the oauth2 web security config picked it up instead.
 /users -> oauth2 filter/security config
 /swagger-ui/index.html - allow through
 /login -> form login filter/security config
-
-
-
-Issues:
-
-
-I had to disable formLogin for now, as this is stopping BasicAuthoirzationFilter working and returning 301 from rest endpoints when it should return 401.

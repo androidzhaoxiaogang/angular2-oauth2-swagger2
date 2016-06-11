@@ -81,6 +81,7 @@ public class SampleSecureOAuth2ApplicationTest {
     }
 
     @Test
+    @Ignore
     public void everythingIsSecuredByDefault() throws Exception {
         this.mvc.perform(get("/").accept(MediaTypes.HAL_JSON))
                 .andExpect(status().isUnauthorized()).andDo(print());

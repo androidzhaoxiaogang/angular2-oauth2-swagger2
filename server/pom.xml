@@ -180,21 +180,13 @@
             <artifactId>velocity</artifactId>
         </dependency>
 
-
+<!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
             <version>${spring-boot.version}</version>
         </dependency>
-
-        <!-- This is for session support. -->
-        <!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-redis</artifactId>
-            <version>${spring-boot.version}</version>
-        </dependency>
-        -->
+-->
 
         <!--
             The spring-boot-actuator module provides all of Spring Boot’s production-ready features (Monitoring etc).

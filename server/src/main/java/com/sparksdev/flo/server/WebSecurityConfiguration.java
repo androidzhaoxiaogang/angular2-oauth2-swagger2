@@ -2,6 +2,7 @@ package com.sparksdev.flo.server;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -65,37 +66,52 @@ public class WebSecurityConfiguration {
             return authApi;
         }
 
-        /**
-         * We override this method to ignore certain requests.
-         *
-         * @param webSecurity
-         * @throws Exception
-         */
         @Override
         public void configure(final WebSecurity webSecurity) throws Exception {
             // This seems to be the most reliable method of letting requests through
             webSecurity
                     .ignoring()
                     .antMatchers("/swagger-ui**", "/swagger-ui/**", "/swagger-editor**", "/webjars/**", "/configuration/**", "/swagger-resources/**", "/v2/**");
-
-
         }
     }
 
-  /*  @Configuration
+    /*
+
+    What do we want to do?
+
+    1) enable /login endpoint
+    2) when user goes to swagger-ui, we want to secure that and force them to login
+    3) ignore everything else
+
+    Problem is, as soon as we add formLogin, it seems to disable basic authentication filter support
+
+    */
+
+    @Configuration
     @Order(1)
     public class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 
+            http.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class);
+
             http
                     .authorizeRequests()
-                    // We will let these through and let oauth handle these...
-                    .antMatchers("/users**").permitAll()
                     .anyRequest().authenticated()
                     .and()
-                    .formLogin().and().csrf().disable();
+                    .formLogin();
+
+
+        }
+
+        @Override
+        public void configure(final WebSecurity webSecurity) throws Exception {
+            // This seems to be the most reliable method of letting requests through
+
+            webSecurity
+                    .ignoring()
+                    .antMatchers("/users**", "/oauth**");
         }
 
         @Override
@@ -108,17 +124,6 @@ public class WebSecurityConfiguration {
             return authApi;
         }
     }
-
-
-*/
-
-
-
-
-
-
-
-
 
     @EnableAuthorizationServer
     protected static class OAuth2Config extends AuthorizationServerConfigurerAdapter {
