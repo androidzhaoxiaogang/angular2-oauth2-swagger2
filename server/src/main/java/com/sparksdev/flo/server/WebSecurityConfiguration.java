@@ -12,10 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.*;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
@@ -30,9 +27,9 @@ import javax.annotation.Resource;
  */
 
 @Configuration
-@EnableOAuth2Client
-//@EnableOAuth2Sso
-@EnableResourceServer
+//@EnableAuthorizationServer
+//@EnableResourceServer
+@EnableOAuth2Client // I would have though this would setup OAuth2ClientAuthenticationProcessingFilter and
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class WebSecurityConfiguration {
@@ -44,16 +41,28 @@ public class WebSecurityConfiguration {
     private UserApi userApi;
 
 
+    @Order
     @Configuration
     public class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
         protected void configure(HttpSecurity http) throws Exception {
 
             http.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class);
 
+            // We need to capture this URL, so our authentication manager handles the /oauth/authorize basic authentication filter
             http
                     .requestMatcher(new AntPathRequestMatcher("/oauth/**"))
                     .csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+
+           /* http
+                    .requestMatcher(new AntPathRequestMatcher("/users**"))
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);*/
+
+
+
+            http.authorizeRequests().anyRequest().permitAll();
         }
 
         @Override
@@ -75,19 +84,7 @@ public class WebSecurityConfiguration {
         }
     }
 
-    /*
-
-    What do we want to do?
-
-    1) enable /login endpoint
-    2) when user goes to swagger-ui, we want to secure that and force them to login
-    3) ignore everything else
-
-    Problem is, as soon as we add formLogin, it seems to disable basic authentication filter support
-
-    */
-
-    @Configuration
+   /* @Configuration
     @Order(1)
     public class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
@@ -98,11 +95,9 @@ public class WebSecurityConfiguration {
 
             http
                     .authorizeRequests()
-                    .anyRequest().authenticated()
-                    .and()
-                    .formLogin();
-
-
+                            .anyRequest().permitAll()
+                            .and()
+                            .formLogin();
         }
 
         @Override
@@ -111,7 +106,7 @@ public class WebSecurityConfiguration {
 
             webSecurity
                     .ignoring()
-                    .antMatchers("/users**", "/oauth**");
+                    .antMatchers("/oauth**", "/users**");
         }
 
         @Override
@@ -125,8 +120,24 @@ public class WebSecurityConfiguration {
         }
     }
 
+*/
+    // This only needs to cover the REST endpoints
+    @Configuration
+    @EnableResourceServer
+    protected static class ResourceServer extends ResourceServerConfigurerAdapter {
+
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
+            http.antMatcher("/users/**").authorizeRequests().anyRequest().authenticated();
+        }
+    }
+
+
+
+
+
     @EnableAuthorizationServer
-    protected static class OAuth2Config extends AuthorizationServerConfigurerAdapter {
+    protected static class OAuthConfig extends AuthorizationServerConfigurerAdapter {
 
         @Resource
         private AuthApi authApi;

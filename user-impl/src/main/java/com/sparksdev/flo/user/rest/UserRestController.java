@@ -2,6 +2,8 @@ package com.sparksdev.flo.user.rest;
 
 import org.springframework.web.bind.annotation.*;
 import com.sparksdev.flo.common.service.BaseService;
+import com.sparksdev.flo.domain.user.User;
+import com.sparksdev.flo.domain.user.UserLookup;
 import com.sparksdev.flo.domain.user.dto.UserDto;
 import com.sparksdev.flo.user.api.user.UserApi;
 
@@ -34,6 +36,16 @@ public class UserRestController extends BaseService {
     )
     @RequestMapping(method= RequestMethod.GET)
     public UserDto[] getAll() {
+
+        // Check we can load the user
+        User user = UserLookup.getLoggedInUser();
+
+        LOG.info("logged in user " + user);
+        if (user == null) {
+            throw new IllegalArgumentException("user is null");
+        }
+
+
         final List<UserDto> users = Arrays.asList(new UserDto("admin"));
         LOG.info("users " + users.size());
         System.out.println("users " + users.size());

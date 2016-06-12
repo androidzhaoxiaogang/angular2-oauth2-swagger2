@@ -16,17 +16,6 @@ public class ControllerConfig {
 
     protected Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    public static final String DEFAULT_ERROR_VIEW = "error";
-
-
-
-   /* @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handle(HttpMessageNotReadableException e) {
-        LOG.warn("Returning HTTP 400 Bad Request", e);
-        throw e;
-    }*/
-
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = Exception.class)
     public String handleException(Exception e) throws Exception {

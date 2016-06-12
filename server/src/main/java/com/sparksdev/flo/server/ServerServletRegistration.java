@@ -9,10 +9,14 @@
 package com.sparksdev.flo.server;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
+import com.sparksdev.flo.authentication.api.AuthApi;
 
+import javax.inject.Inject;
+import javax.servlet.Filter;
 import javax.servlet.Servlet;
 
 /**
@@ -23,6 +27,9 @@ import javax.servlet.Servlet;
 @Configuration
 public class ServerServletRegistration extends SpringBootServletInitializer {
 
+    @Inject
+    AuthApi authApi;
+
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(ServerServletRegistration.class/*, ComponentConfiguration.class*/);
     }
@@ -32,5 +39,13 @@ public class ServerServletRegistration extends SpringBootServletInitializer {
         registration.addUrlMappings(uris);
         return registration;
     }
+
+
+    private FilterRegistrationBean register(final Filter servlet, final String... uris) {
+        FilterRegistrationBean registration = new FilterRegistrationBean(servlet);
+        registration.addUrlPatterns(uris);
+        return registration;
+    }
+
 
 }

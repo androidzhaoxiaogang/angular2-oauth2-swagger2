@@ -43,15 +43,6 @@ public class SwaggerConfig {
         return PathSelectors.regex("/users.*");
     }
 
-    /**
-     *
-     *
-     * @return
-     */
-    private OAuth implicitFlow() {
-        return new OAuth(securitySchemaOAuth2, newArrayList(getAuthorizationScope()),
-                newArrayList(new ImplicitGrant(new LoginEndpoint("/oauth/dialog"), "access_code")));
-    }
 
     private AuthorizationScope getAuthorizationScope() {
         return new AuthorizationScope(authorizationScopeGlobal, authorizationScopeGlobal);

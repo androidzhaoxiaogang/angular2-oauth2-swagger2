@@ -32,8 +32,6 @@ import java.security.Principal;
  *  in the classpath or from the root of the ServletContext.
  */
 @SpringBootApplication
-
-
 @RestController
 @ComponentScan(basePackages = "com.sparksdev.flo" )
 @PropertySource("classpath:application.properties")

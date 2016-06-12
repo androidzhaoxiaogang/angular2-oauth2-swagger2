@@ -9,11 +9,7 @@
 package com.sparksdev.flo.server;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import java.util.Date;
-import java.util.Map;
 
 /**
  * @author bengill
@@ -25,20 +21,9 @@ import java.util.Map;
 @Configuration
 public class ServerMvcConfiguration extends WebMvcConfigurerAdapter {
 
-    @RequestMapping("/")
-    public String home(Map<String, Object> model) {
-        model.put("message", "Hello World");
-        model.put("title", "Hello Home");
-        model.put("date", new Date());
-        return "home";
-    }
 
-    @RequestMapping("/foo")
-    public String foo() {
-        throw new RuntimeException("Expected exception in controller");
-    }
-
-   /* @Override
+    // We should not have to do this...  this should happen automatically for us!
+   /*@Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
     }*/
